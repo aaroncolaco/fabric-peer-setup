@@ -74,4 +74,16 @@ describe('Peer Tests', () => {
         });
     });
   });
+
+  describe('POST ' + apiRootURL + '/cryptogen-generate', () => {
+    it('response status should be 201', (done) => {
+      chai.request(completeURL)
+        .post('/cryptogen-generate?fileName=crypto-config.yaml')
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          done();
+        });
+    });
+  });
 });

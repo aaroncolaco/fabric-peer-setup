@@ -9,4 +9,6 @@ router.post('/', controller.createPeer);
 
 router.post('/crypto-config', controller.createCryptoConfig);
 
+router.post('/cryptogen-generate', controller.runCryptogen);
+
 module.exports = router;
