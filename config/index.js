@@ -8,6 +8,7 @@ module.exports = {
   getEnv: () => {
     return env;
   },
+  getDirUri: () => process.env.DIR_URI || envtConfig.dirUri,
   getStatusMsgs: () => {
     return config.statusMsgs;
   },
