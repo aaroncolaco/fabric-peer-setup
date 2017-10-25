@@ -6,6 +6,20 @@ const yaml = require('js-yaml');
 
 const config = require('../config/');
 
+const createAnchorPeerFile = (req, res) => {
+  const channelName = req.query.channelName;
+  const profileName = req.query.profileName;
+  const orgName = req.query.orgName;
+
+  exec(`cd ${config.getDirUri()} && export FABRIC_CFG_PATH=$PWD && export CHANNEL_NAME=${channelName} && configtxgen -profile ${profileName} -outputAnchorPeersUpdate ./channel/${orgName}Anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgName}`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`\n!!! configtxgen exec anchor peer error: ${error}`);
+      return res.status(500).json({ message: "Something went wrong. Check console" });
+    }
+    return res.status(201).json({ "message": "created anchor peer file", "path": config.getDirUri() + `channel/${orgName}Anchors.tx` });
+  });
+};
+
 const createChannel = (req, res) => {
   const channelName = req.query.channelName;
   const profileName = req.query.profileName;
@@ -55,6 +69,7 @@ const runCryptogen = (req, res) => {
 
 
 module.exports = {
+  createAnchorPeerFile,
   createChannel,
   createGenesisBlock,
   createPeer,

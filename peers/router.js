@@ -8,6 +8,9 @@ const controller = require('./controller');
 router.post('/', controller.createPeer);
 
 // specify `?channel` & `?profileName`
+router.post('/anchor-peer-file', controller.createAnchorPeerFile);
+
+// specify `?channel` & `?profileName`
 router.post('/channel', controller.createChannel);
 
 // specify `?fileName`

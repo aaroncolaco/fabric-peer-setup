@@ -266,4 +266,17 @@ describe('Peer Config Files Tests', () => {
         });
     });
   });
+
+  describe('POST ' + apiRootURL + '/anchor-peer-file', () => {
+    it('configtxgen generate anchor peer file from `configtx.yaml`', (done) => {
+      chai.request(completeURL)
+        .post('/anchor-peer-file?profileName=TwoOrgsChannel&channelName=SampleConsortium&orgName=Org1')
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
+          done();
+        });
+    });
+  });
 });
