@@ -49,7 +49,145 @@ const cryptoConfigJSON = {
   ]
 };
 
-describe('Peer Tests', () => {
+const configTxJSON = {
+  "Orderer": {
+    "OrdererType": "solo",
+    "Addresses": [
+      "orderer.kyc.com:7050"
+    ],
+    "BatchTimeout": "2s",
+    "BatchSize": {
+      "MaxMessageCount": 10,
+      "AbsoluteMaxBytes": "98 MB",
+      "PreferredMaxBytes": "512 KB"
+    },
+    "Kafka": {
+      "Brokers": [
+        "127.0.0.1:9092"
+      ]
+    },
+    "Organizations": null
+  },
+  "Application": {
+    "Organizations": null
+  },
+  "Organizations": [
+    {
+      "Name": "OrdererMSP",
+      "ID": "OrdererMSP",
+      "MSPDir": "crypto-config/ordererOrganizations/kyc.com/msp"
+    },
+    {
+      "Name": "pslloanMSP",
+      "ID": "pslloanMSP",
+      "MSPDir": "crypto-config/peerOrganizations/pslloan.kyc.com/msp",
+      "AnchorPeers": [
+        {
+          "Host": "peer0.pslloan.kyc.com",
+          "Port": 7051
+        }
+      ]
+    },
+    {
+      "Name": "pslbankMSP",
+      "ID": "pslbankMSP",
+      "MSPDir": "crypto-config/peerOrganizations/pslbank.kyc.com/msp",
+      "AnchorPeers": [
+        {
+          "Host": "peer0.pslbank.kyc.com",
+          "Port": 7051
+        }
+      ]
+    }
+  ],
+  "Profiles": {
+    "TwoOrgsOrdererGenesis": {
+      "Orderer": {
+        "OrdererType": "solo",
+        "Addresses": [
+          "orderer.kyc.com:7050"
+        ],
+        "BatchTimeout": "2s",
+        "BatchSize": {
+          "MaxMessageCount": 10,
+          "AbsoluteMaxBytes": "98 MB",
+          "PreferredMaxBytes": "512 KB"
+        },
+        "Kafka": {
+          "Brokers": [
+            "127.0.0.1:9092"
+          ]
+        },
+        "Organizations": [
+          {
+            "Name": "OrdererMSP",
+            "ID": "OrdererMSP",
+            "MSPDir": "crypto-config/ordererOrganizations/kyc.com/msp"
+          }
+        ]
+      },
+      "Consortiums": {
+        "SampleConsortium": {
+          "Organizations": [
+            {
+              "Name": "pslloanMSP",
+              "ID": "pslloanMSP",
+              "MSPDir": "crypto-config/peerOrganizations/pslloan.kyc.com/msp",
+              "AnchorPeers": [
+                {
+                  "Host": "peer0.pslloan.kyc.com",
+                  "Port": 7051
+                }
+              ]
+            },
+            {
+              "Name": "pslbankMSP",
+              "ID": "pslbankMSP",
+              "MSPDir": "crypto-config/peerOrganizations/pslbank.kyc.com/msp",
+              "AnchorPeers": [
+                {
+                  "Host": "peer0.pslbank.kyc.com",
+                  "Port": 7051
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "TwoOrgsChannel": {
+      "Consortium": "SampleConsortium",
+      "Application": {
+        "Organizations": [
+          {
+            "Name": "pslloanMSP",
+            "ID": "pslloanMSP",
+            "MSPDir": "crypto-config/peerOrganizations/pslloan.kyc.com/msp",
+            "AnchorPeers": [
+              {
+                "Host": "peer0.pslloan.kyc.com",
+                "Port": 7051
+              }
+            ]
+          },
+          {
+            "Name": "pslbankMSP",
+            "ID": "pslbankMSP",
+            "MSPDir": "crypto-config/peerOrganizations/pslbank.kyc.com/msp",
+            "AnchorPeers": [
+              {
+                "Host": "peer0.pslbank.kyc.com",
+                "Port": 7051
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+};
+
+describe('Peer Config Files Tests', () => {
   describe('POST ' + apiRootURL, () => {
     it('response status should be 201', (done) => {
       chai.request(completeURL)
@@ -62,26 +200,42 @@ describe('Peer Tests', () => {
     });
   });
 
-  describe('POST ' + apiRootURL + '/yaml-file', () => {
-    it('response status should be 201', (done) => {
+  describe('POST ' + apiRootURL + '/yaml-file?fileName=crypto-config.yaml', () => {
+    it('create `cryto-config.yaml`', (done) => {
       chai.request(completeURL)
         .post('/yaml-file?fileName=crypto-config.yaml')
         .send(cryptoConfigJSON)
         .end((err, res) => {
           expect(res).to.have.status(201);
           expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
           done();
         });
     });
   });
 
   describe('POST ' + apiRootURL + '/cryptogen-generate', () => {
-    it('response status should be 201', (done) => {
+    it('cryptogen generate certificates from `crypto-config.yaml`', (done) => {
       chai.request(completeURL)
         .post('/cryptogen-generate?fileName=crypto-config.yaml')
         .end((err, res) => {
           expect(res).to.have.status(201);
           expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
+          done();
+        });
+    });
+  });
+
+  describe('POST ' + apiRootURL + '/yaml-file?fileName=configtx.yaml', () => {
+    it('create `configtx.yaml`', (done) => {
+      chai.request(completeURL)
+        .post('/yaml-file?fileName=configtx.yaml')
+        .send(cryptoConfigJSON)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
           done();
         });
     });
