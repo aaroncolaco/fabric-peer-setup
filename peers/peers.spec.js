@@ -1,6 +1,6 @@
 'use strict';
 
-// const bin = require('../bin/www');
+const bin = require('../bin/www');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
@@ -214,6 +214,20 @@ describe('Peer Config Files Tests', () => {
     });
   });
 
+  describe('GET ' + apiRootURL + '/yaml-file?fileName=crypto-config.yaml', () => {
+    it('read `crypto-config.yaml`', (done) => {
+      chai.request(completeURL)
+        .get('/yaml-file?fileName=crypto-config.yaml')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('file');
+          expect(res.body.file).to.deep.equal(cryptoConfigJSON);
+          done();
+        });
+    });
+  });
+
   describe('POST ' + apiRootURL + '/cryptogen-generate', () => {
     it('cryptogen generate certificates from `crypto-config.yaml`', (done) => {
       chai.request(completeURL)
@@ -236,6 +250,20 @@ describe('Peer Config Files Tests', () => {
           expect(res).to.have.status(201);
           expect(res).to.be.an('object');
           expect(res.body).to.have.property('path');
+          done();
+        });
+    });
+  });
+
+  describe('GET ' + apiRootURL + '/yaml-file?fileName=configtx.yaml', () => {
+    it('read `configtx.yaml`', (done) => {
+      chai.request(completeURL)
+        .get('/yaml-file?fileName=configtx.yaml')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('file');
+          expect(res.body.file).to.deep.equal(configTxJSON);
           done();
         });
     });

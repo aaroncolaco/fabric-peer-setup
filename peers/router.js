@@ -17,6 +17,7 @@ router.post('/channel', controller.createChannel);
 router.post('/cryptogen-generate', controller.runCryptogen);
 
 // specify `?fileName`
+router.get('/yaml-file', controller.getYamlFile);
 router.post('/yaml-file', controller.createYamlFile);
 
 // specify `?profileName`

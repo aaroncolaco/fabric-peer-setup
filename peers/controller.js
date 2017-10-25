@@ -56,6 +56,12 @@ const createYamlFile = (req, res) => {
   return res.status(201).json({ "message": "YAML file created", path: config.getDirUri() + fileName });
 };
 
+const getYamlFile = (req, res) => {
+  const fileName = req.query.fileName || 'myYamlFile.yaml';
+  const doc = yaml.safeLoad(fs.readFileSync(config.getDirUri() + fileName, 'utf8'));
+  return res.status(200).json({ "message": "Retrieved file", file: doc });
+};
+
 const runCryptogen = (req, res) => {
   const fileName = req.query.fileName || 'crypto-config.yaml';
   exec(`cd ${config.getDirUri()} && cryptogen generate --config=${fileName}`, (error, stdout, stderr) => {
@@ -74,5 +80,6 @@ module.exports = {
   createGenesisBlock,
   createPeer,
   createYamlFile,
+  getYamlFile,
   runCryptogen
 };
