@@ -62,10 +62,10 @@ describe('Peer Tests', () => {
     });
   });
 
-  describe('POST ' + apiRootURL + '/crypto-config', () => {
+  describe('POST ' + apiRootURL + '/yaml-file', () => {
     it('response status should be 201', (done) => {
       chai.request(completeURL)
-        .post('/crypto-config')
+        .post('/yaml-file?fileName=crypto-config.yaml')
         .send(cryptoConfigJSON)
         .end((err, res) => {
           expect(res).to.have.status(201);

@@ -7,8 +7,10 @@ const controller = require('./controller');
 
 router.post('/', controller.createPeer);
 
-router.post('/crypto-config', controller.createCryptoConfig);
-
+// specify `?fileName`
 router.post('/cryptogen-generate', controller.runCryptogen);
+
+// specify `?fileName`
+router.post('/yaml-file', controller.createYamlFile);
 
 module.exports = router;
