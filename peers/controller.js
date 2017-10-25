@@ -6,6 +6,19 @@ const yaml = require('js-yaml');
 
 const config = require('../config/');
 
+const createChannel = (req, res) => {
+  const channelName = req.query.channelName;
+  const profileName = req.query.profileName;
+
+  exec(`cd ${config.getDirUri()} && export FABRIC_CFG_PATH=$PWD && export CHANNEL_NAME=${channelName} && configtxgen -profile ${profileName} -outputCreateChannelTx ./channel/${channelName}.tx -channelID $CHANNEL_NAME`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`\n!!! configtxgen exec channel error: ${error}`);
+      return res.status(500).json({ message: "Something went wrong. Check console" });
+    }
+    return res.status(201).json({ "message": "created channel file", "path": config.getDirUri() + `channel/${channelName}.tx` });
+  });
+};
+
 const createGenesisBlock = (req, res) => {
   const profileName = req.query.profileName;
 
@@ -42,8 +55,9 @@ const runCryptogen = (req, res) => {
 
 
 module.exports = {
-  createPeer,
+  createChannel,
   createGenesisBlock,
+  createPeer,
   createYamlFile,
   runCryptogen
 };

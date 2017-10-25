@@ -253,4 +253,17 @@ describe('Peer Config Files Tests', () => {
         });
     });
   });
+
+  describe('POST ' + apiRootURL + '/channel', () => {
+    it('configtxgen generate channel file from `configtx.yaml`', (done) => {
+      chai.request(completeURL)
+        .post('/channel?profileName=TwoOrgsChannel&channelName=SampleConsortium')
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
+          done();
+        });
+    });
+  });
 });
