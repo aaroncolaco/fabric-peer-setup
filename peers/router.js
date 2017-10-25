@@ -13,4 +13,7 @@ router.post('/cryptogen-generate', controller.runCryptogen);
 // specify `?fileName`
 router.post('/yaml-file', controller.createYamlFile);
 
+// specify `?profileName`
+router.post('/genesis-block', controller.createGenesisBlock);
+
 module.exports = router;

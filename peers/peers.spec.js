@@ -53,7 +53,7 @@ const configTxJSON = {
   "Orderer": {
     "OrdererType": "solo",
     "Addresses": [
-      "orderer.kyc.com:7050"
+      "orderer.example.com:7050"
     ],
     "BatchTimeout": "2s",
     "BatchSize": {
@@ -75,26 +75,26 @@ const configTxJSON = {
     {
       "Name": "OrdererMSP",
       "ID": "OrdererMSP",
-      "MSPDir": "crypto-config/ordererOrganizations/kyc.com/msp"
+      "MSPDir": "crypto-config/ordererOrganizations/example.com/msp"
     },
     {
-      "Name": "pslloanMSP",
-      "ID": "pslloanMSP",
-      "MSPDir": "crypto-config/peerOrganizations/pslloan.kyc.com/msp",
+      "Name": "Org1",
+      "ID": "Org1",
+      "MSPDir": "crypto-config/peerOrganizations/example.com/msp",
       "AnchorPeers": [
         {
-          "Host": "peer0.pslloan.kyc.com",
+          "Host": "peer0.org1.example.com",
           "Port": 7051
         }
       ]
     },
     {
-      "Name": "pslbankMSP",
-      "ID": "pslbankMSP",
-      "MSPDir": "crypto-config/peerOrganizations/pslbank.kyc.com/msp",
+      "Name": "Org2",
+      "ID": "Org2",
+      "MSPDir": "crypto-config/peerOrganizations/example.com/msp",
       "AnchorPeers": [
         {
-          "Host": "peer0.pslbank.kyc.com",
+          "Host": "peer0.org2.example.com",
           "Port": 7051
         }
       ]
@@ -105,7 +105,7 @@ const configTxJSON = {
       "Orderer": {
         "OrdererType": "solo",
         "Addresses": [
-          "orderer.kyc.com:7050"
+          "orderer.example.com:7050"
         ],
         "BatchTimeout": "2s",
         "BatchSize": {
@@ -122,7 +122,7 @@ const configTxJSON = {
           {
             "Name": "OrdererMSP",
             "ID": "OrdererMSP",
-            "MSPDir": "crypto-config/ordererOrganizations/kyc.com/msp"
+            "MSPDir": "crypto-config/ordererOrganizations/example.com/msp"
           }
         ]
       },
@@ -130,23 +130,23 @@ const configTxJSON = {
         "SampleConsortium": {
           "Organizations": [
             {
-              "Name": "pslloanMSP",
-              "ID": "pslloanMSP",
-              "MSPDir": "crypto-config/peerOrganizations/pslloan.kyc.com/msp",
+              "Name": "Org1",
+              "ID": "Org1",
+              "MSPDir": "crypto-config/peerOrganizations/org1.example.com/msp",
               "AnchorPeers": [
                 {
-                  "Host": "peer0.pslloan.kyc.com",
+                  "Host": "peer0.org1.example.com",
                   "Port": 7051
                 }
               ]
             },
             {
-              "Name": "pslbankMSP",
-              "ID": "pslbankMSP",
-              "MSPDir": "crypto-config/peerOrganizations/pslbank.kyc.com/msp",
+              "Name": "Org2",
+              "ID": "Org2",
+              "MSPDir": "crypto-config/peerOrganizations/org2.example.com/msp",
               "AnchorPeers": [
                 {
-                  "Host": "peer0.pslbank.kyc.com",
+                  "Host": "peer0.org2.example.com",
                   "Port": 7051
                 }
               ]
@@ -160,23 +160,23 @@ const configTxJSON = {
       "Application": {
         "Organizations": [
           {
-            "Name": "pslloanMSP",
-            "ID": "pslloanMSP",
-            "MSPDir": "crypto-config/peerOrganizations/pslloan.kyc.com/msp",
+            "Name": "Org1",
+            "ID": "Org1",
+            "MSPDir": "crypto-config/peerOrganizations/org1.example.com/msp",
             "AnchorPeers": [
               {
-                "Host": "peer0.pslloan.kyc.com",
+                "Host": "peer0.org1.example.com",
                 "Port": 7051
               }
             ]
           },
           {
-            "Name": "pslbankMSP",
-            "ID": "pslbankMSP",
-            "MSPDir": "crypto-config/peerOrganizations/pslbank.kyc.com/msp",
+            "Name": "Org2",
+            "ID": "Org2",
+            "MSPDir": "crypto-config/peerOrganizations/org2.example.com/msp",
             "AnchorPeers": [
               {
-                "Host": "peer0.pslbank.kyc.com",
+                "Host": "peer0.org2.example.com",
                 "Port": 7051
               }
             ]
@@ -231,7 +231,20 @@ describe('Peer Config Files Tests', () => {
     it('create `configtx.yaml`', (done) => {
       chai.request(completeURL)
         .post('/yaml-file?fileName=configtx.yaml')
-        .send(cryptoConfigJSON)
+        .send(configTxJSON)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
+          done();
+        });
+    });
+  });
+
+  describe('POST ' + apiRootURL + '/genesis-block', () => {
+    it('configtxgen generate genesis block from `configtx.yaml`', (done) => {
+      chai.request(completeURL)
+        .post('/genesis-block?profileName=TwoOrgsOrdererGenesis')
         .end((err, res) => {
           expect(res).to.have.status(201);
           expect(res).to.be.an('object');
