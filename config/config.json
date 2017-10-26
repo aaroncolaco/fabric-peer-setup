@@ -1,7 +1,7 @@
 {
   "production": {
     "dbString" : "DB_URL",
-    "dirUri" : "/home/aaron/fabric-peers/",
+    "dirUri" : "/usr/src/fabric-peers/",
     "url": "http://10.244.49.238:3000"
   },
   "development" : {

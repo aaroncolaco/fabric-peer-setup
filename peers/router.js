@@ -8,10 +8,17 @@ const peer = require('./peer-setup');
 
 router.post('/', controller.createPeer);
 
+// specify `?channel` & `?profileName`
+router.post('/anchor-peer-file', controller.createAnchorPeerFile);
+
+// specify `?channel` & `?profileName`
+router.post('/channel', controller.createChannel);
+
 // specify `?fileName`
 router.post('/cryptogen-generate', controller.runCryptogen);
 
 // specify `?fileName`
+router.get('/yaml-file', controller.getYamlFile);
 router.post('/yaml-file', controller.createYamlFile);
 
 // specify `?profileName`

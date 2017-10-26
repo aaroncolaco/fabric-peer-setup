@@ -214,6 +214,20 @@ describe('Peer Config Files Tests', () => {
     });
   });
 
+  describe('GET ' + apiRootURL + '/yaml-file?fileName=crypto-config.yaml', () => {
+    it('read `crypto-config.yaml`', (done) => {
+      chai.request(completeURL)
+        .get('/yaml-file?fileName=crypto-config.yaml')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('file');
+          expect(res.body.file).to.deep.equal(cryptoConfigJSON);
+          done();
+        });
+    });
+  });
+
   describe('POST ' + apiRootURL + '/cryptogen-generate', () => {
     it('cryptogen generate certificates from `crypto-config.yaml`', (done) => {
       chai.request(completeURL)
@@ -241,10 +255,50 @@ describe('Peer Config Files Tests', () => {
     });
   });
 
+  describe('GET ' + apiRootURL + '/yaml-file?fileName=configtx.yaml', () => {
+    it('read `configtx.yaml`', (done) => {
+      chai.request(completeURL)
+        .get('/yaml-file?fileName=configtx.yaml')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('file');
+          expect(res.body.file).to.deep.equal(configTxJSON);
+          done();
+        });
+    });
+  });
+
   describe('POST ' + apiRootURL + '/genesis-block', () => {
     it('configtxgen generate genesis block from `configtx.yaml`', (done) => {
       chai.request(completeURL)
         .post('/genesis-block?profileName=TwoOrgsOrdererGenesis')
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
+          done();
+        });
+    });
+  });
+
+  describe('POST ' + apiRootURL + '/channel', () => {
+    it('configtxgen generate channel file from `configtx.yaml`', (done) => {
+      chai.request(completeURL)
+        .post('/channel?profileName=TwoOrgsChannel&channelName=SampleConsortium')
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
+          done();
+        });
+    });
+  });
+
+  describe('POST ' + apiRootURL + '/anchor-peer-file', () => {
+    it('configtxgen generate anchor peer file from `configtx.yaml`', (done) => {
+      chai.request(completeURL)
+        .post('/anchor-peer-file?profileName=TwoOrgsChannel&channelName=SampleConsortium&orgName=Org1')
         .end((err, res) => {
           expect(res).to.have.status(201);
           expect(res).to.be.an('object');

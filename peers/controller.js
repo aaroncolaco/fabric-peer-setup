@@ -6,6 +6,33 @@ const yaml = require('js-yaml');
 
 const config = require('../config/');
 
+const createAnchorPeerFile = (req, res) => {
+  const channelName = req.query.channelName;
+  const profileName = req.query.profileName;
+  const orgName = req.query.orgName;
+
+  exec(`cd ${config.getDirUri()} && export FABRIC_CFG_PATH=$PWD && export CHANNEL_NAME=${channelName} && configtxgen -profile ${profileName} -outputAnchorPeersUpdate ./channel/${orgName}Anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgName}`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`\n!!! configtxgen exec anchor peer error: ${error}`);
+      return res.status(500).json({ message: "Something went wrong. Check console" });
+    }
+    return res.status(201).json({ "message": "created anchor peer file", "path": config.getDirUri() + `channel/${orgName}Anchors.tx` });
+  });
+};
+
+const createChannel = (req, res) => {
+  const channelName = req.query.channelName;
+  const profileName = req.query.profileName;
+
+  exec(`cd ${config.getDirUri()} && export FABRIC_CFG_PATH=$PWD && export CHANNEL_NAME=${channelName} && configtxgen -profile ${profileName} -outputCreateChannelTx ./channel/${channelName}.tx -channelID $CHANNEL_NAME`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`\n!!! configtxgen exec channel error: ${error}`);
+      return res.status(500).json({ message: "Something went wrong. Check console" });
+    }
+    return res.status(201).json({ "message": "created channel file", "path": config.getDirUri() + `channel/${channelName}.tx` });
+  });
+};
+
 const createGenesisBlock = (req, res) => {
   const profileName = req.query.profileName;
 
@@ -29,6 +56,12 @@ const createYamlFile = (req, res) => {
   return res.status(201).json({ "message": "YAML file created", path: config.getDirUri() + fileName });
 };
 
+const getYamlFile = (req, res) => {
+  const fileName = req.query.fileName || 'myYamlFile.yaml';
+  const doc = yaml.safeLoad(fs.readFileSync(config.getDirUri() + fileName, 'utf8'));
+  return res.status(200).json({ "message": "Retrieved file", file: doc });
+};
+
 const runCryptogen = (req, res) => {
   const fileName = req.query.fileName || 'crypto-config.yaml';
   exec(`cd ${config.getDirUri()} && cryptogen generate --config=${fileName}`, (error, stdout, stderr) => {
@@ -42,8 +75,11 @@ const runCryptogen = (req, res) => {
 
 
 module.exports = {
-  createPeer,
+  createAnchorPeerFile,
+  createChannel,
   createGenesisBlock,
+  createPeer,
   createYamlFile,
+  getYamlFile,
   runCryptogen
 };
