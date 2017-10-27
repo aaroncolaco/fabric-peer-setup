@@ -296,7 +296,7 @@ describe('Peer Config Files Tests', () => {
     });
   });
 
-  describe('POST ' + apiRootURL + '/docker-compose.yaml', () => {
+  describe('POST ' + apiRootURL + '/docker-compose', () => {
     it('generate docker-compose file', (done) => {
       chai.request(completeURL)
         .post('/docker-compose?fileName=docker-compose.yaml')

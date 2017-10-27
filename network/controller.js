@@ -59,10 +59,12 @@ const createGenesisBlock = (req, res) => {
 
 const createNetwork = (req, res) => {
   const fileName = req.query.fileName || 'docker-compose.yaml';
-
   const terminalCommand = `cd ${config.getDirUri()} && docker-compose -f ${fileName} up -d`;
 
-  helpers.runTerminalCommand(terminalCommand)
+  helpers.createBaseYamlFile()
+    .then(success => {
+      return helpers.runTerminalCommand(terminalCommand);
+    })
     .then(output => {
       return res.status(201).json({ "message": "Network created" });
     })

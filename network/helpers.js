@@ -9,6 +9,20 @@ const config = require('../config/');
 const dirToJson = require('dir-to-json');
 const _ = require('lodash');
 
+// create`base.yaml` - static file that is always needed by docker-compose
+const createBaseYamlFile = () => {
+  const baseYaml = fs.readFileSync(__dirname + '/base.yaml', 'utf8');
+
+  return new Promise((resolve, reject) => {
+    fs.writeFile(config.getDirUri() + 'base.yaml', baseYaml, err => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve();
+    });
+  });
+};
+
 
 const getChildren = dirTree => {
   return dirTree.children;
@@ -169,6 +183,7 @@ const runTerminalCommand = command => {
 
 
 module.exports = {
+  createBaseYamlFile,
   getChildren,
   getDockerComposeJSON,
   getNames,
