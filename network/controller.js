@@ -109,30 +109,34 @@ const createDockerCompose = (req, res) => {
     .then(dirTree => {
       const peerOrganizations = helpers.getPeerOrganizations(dirTree);
       const ordererOrganizations = helpers.getOrdererOrganizations(dirTree);
-      const peerNames = helpers.getNames(dirTree);
-      let ordererNames;
 
-      if(ordererOrganizations) ordererNames = helpers.getOrdererNames(dirTree);
+      let peerNames;
+      if (peerOrganizations) peerNames = helpers.getNames(dirTree);
+
+      let ordererNames;
+      if (ordererOrganizations) ordererNames = helpers.getOrdererNames(dirTree);
 
       // Peer directory and CA directory
-      _.map(peerOrganizations, peer => {
-        const files = helpers.getChildren(peer);
-        _.map(files, item => {
+      if (peerOrganizations) {
+        _.map(peerOrganizations, peer => {
+          const files = helpers.getChildren(peer);
+          _.map(files, item => {
 
-          if (item.name == "ca") { // reading CA certificates
-            caDirectory[peer.name] = [];
-            _.map(item.children, specificCA => {
-              caDirectory[peer.name].push(specificCA.name);
-            });
-          } else if (item.name == "peers") { // reading Peer certificates
-            peerDirectory[peer.name] = [];
-            _.map(item.children, specificPeer => {
-              peerDirectory[peer.name].push(specificPeer.name);
-            });
-          }
+            if (item.name == "ca") { // reading CA certificates
+              caDirectory[peer.name] = [];
+              _.map(item.children, specificCA => {
+                caDirectory[peer.name].push(specificCA.name);
+              });
+            } else if (item.name == "peers") { // reading Peer certificates
+              peerDirectory[peer.name] = [];
+              _.map(item.children, specificPeer => {
+                peerDirectory[peer.name].push(specificPeer.name);
+              });
+            }
 
+          });
         });
-      });
+      }
 
       // Orderer directory
       if (ordererOrganizations) {
