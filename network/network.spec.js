@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 const config = require('../config');
 
 const hostURL = config.getURL();
-const apiRootURL = '/api/peers';
+const apiRootURL = '/api/network';
 const completeURL = hostURL + apiRootURL;
 
 const cryptoConfigJSON = {
@@ -309,15 +309,15 @@ describe('Peer Config Files Tests', () => {
     });
   });
 
-  // describe('POST ' + apiRootURL + '/network', () => {
-  //   it('create the network', (done) => {
-  //     chai.request(completeURL)
-  //       .post('/network?fileName=docker-compose.yaml')
-  //       .end((err, res) => {
-  //         expect(res).to.have.status(201);
-  //         expect(res).to.be.an('object');
-  //         done();
-  //       });
-  //   });
-  // });
+  describe('POST ' + apiRootURL, () => {
+    it('create the network', (done) => {
+      chai.request(completeURL)
+        .post('?fileName=docker-compose.yaml')
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          done();
+        });
+    });
+  });
 });

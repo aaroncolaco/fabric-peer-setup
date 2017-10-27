@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const logger = require('morgan');
 
-const peers = require('./peers/router');
+const network = require('./network/router');
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/api/peers', peers);
+app.use('/api/network', network);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
