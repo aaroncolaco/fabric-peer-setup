@@ -16,7 +16,7 @@ const createAnchorPeerFile = (req, res) => {
 
   const terminalCommand = `cd ${config.getDirUri()} && export FABRIC_CFG_PATH=$PWD && export CHANNEL_NAME=${channelName} && configtxgen -profile ${profileName} -outputAnchorPeersUpdate ./channel/${orgName}Anchors.tx -channelID $CHANNEL_NAME -asOrg ${orgName}`;
 
-  helpers.runTerminalCommand()
+  helpers.runTerminalCommand(terminalCommand)
     .then(output => {
       return res.status(201).json({ "message": "created anchor peer file", "path": config.getDirUri() + `channel/${orgName}Anchors.tx` });
     })
@@ -32,7 +32,7 @@ const createChannel = (req, res) => {
 
   const terminalCommand = `cd ${config.getDirUri()} && export FABRIC_CFG_PATH=$PWD && export CHANNEL_NAME=${channelName} && configtxgen -profile ${profileName} -outputCreateChannelTx ./channel/${channelName}.tx -channelID $CHANNEL_NAME`;
 
-  helpers.runTerminalCommand()
+  helpers.runTerminalCommand(terminalCommand)
     .then(output => {
       return res.status(201).json({ "message": "created channel file", "path": config.getDirUri() + `channel/${channelName}.tx` });
     })
@@ -47,7 +47,7 @@ const createGenesisBlock = (req, res) => {
 
   const terminalCommand = `cd ${config.getDirUri()} && export FABRIC_CFG_PATH=$PWD && mkdir -p channel && configtxgen -profile ${profileName} -outputBlock ./channel/genesis.block`;
 
-  helpers.runTerminalCommand()
+  helpers.runTerminalCommand(terminalCommand)
     .then(output => {
       return res.status(201).json({ "message": "created genesis file", "path": config.getDirUri() + 'channel/genesis.block' });
     })
@@ -62,7 +62,7 @@ const createNetwork = (req, res) => {
 
   const terminalCommand = `cd ${config.getDirUri()} && docker-compose -f ${fileName} up -d`;
 
-  helpers.runTerminalCommand()
+  helpers.runTerminalCommand(terminalCommand)
     .then(output => {
       return res.status(201).json({ "message": "Network created" });
     })
@@ -90,7 +90,7 @@ const runCryptogen = (req, res) => {
 
   const terminalCommand = `cd ${config.getDirUri()} && cryptogen generate --config=${fileName}`;
 
-  helpers.runTerminalCommand()
+  helpers.runTerminalCommand(terminalCommand)
     .then(output => {
       return res.status(201).json({ "message": "certificates generated", "path": config.getDirUri() });
     })
