@@ -6,7 +6,7 @@
   },
   "development" : {
     "dbString" : "DB_URL",
-    "dirUri" : "/home/aaron/fabric-peers/",
+    "dirUri" : "/home/user/fabric-peers/",
     "url": "http://10.244.51.109:3000"
   },
   "statusMsgs": {
