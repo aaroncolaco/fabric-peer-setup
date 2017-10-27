@@ -22,7 +22,7 @@ const createAnchorPeerFile = (req, res) => {
     })
     .catch(err => {
       console.error(`\n!!! Error generating Anchor Peer file: ${err}\n`);
-      return res.status(500).json({ message: "Something went wrong. Check console" });
+      return errorResponse(res, 'Error generating Anchor Peer file', err);
     });
 };
 
@@ -38,7 +38,7 @@ const createChannel = (req, res) => {
     })
     .catch(err => {
       console.error(`\n!!! Error Creating Channel: ${err}\n`);
-      return res.status(500).json({ message: "Something went wrong. Check console" });
+      return errorResponse(res, 'Error Creating Channel', err);
     });
 };
 
@@ -53,7 +53,7 @@ const createGenesisBlock = (req, res) => {
     })
     .catch(err => {
       console.error(`\n!!! Error generating Genesis File: ${err}\n`);
-      return res.status(500).json({ message: "Something went wrong. Check console" });
+      return errorResponse(res, 'Error generating Genesis File', err);
     });
 };
 
@@ -70,7 +70,7 @@ const createNetwork = (req, res) => {
     })
     .catch(err => {
       console.error(`\n!!! Error creating network: ${err}\n`);
-      return res.status(500).json({ message: "Something went wrong. Check console" });
+      return errorResponse(res, 'Error creating network', err);
     });
 };
 
@@ -97,7 +97,7 @@ const runCryptogen = (req, res) => {
     })
     .catch(err => {
       console.error(`\n!!! Error running Cryptogen: ${err}\n`);
-      return res.status(500).json({ message: "Something went wrong. Check console" });
+      return errorResponse(res, 'Error running Cryptogen', err);
     });
 };
 
@@ -150,18 +150,22 @@ const createDockerCompose = (req, res) => {
       try {
         const doc = yaml.safeDump(helpers.getDockerComposeJSON(caDirectory, peerDirectory, ordererDirectory));
         fs.writeFileSync(config.getDirUri() + fileName, doc);
-      } catch (e) {
-        console.error(e);
-        return res.status(500).json({ "message": "Docker-compose file creation failed!", data: e.toString() });
+      } catch (err) {
+        console.error(`\n!!! Error generating docker-compose.yaml: ${err}\n`);
+        return errorResponse(res, 'Error generating docker-compose.yaml', err);
       }
       return res.status(201).json({ "message": "Docker-compose file is generated successfully!", path: config.getDirUri() + fileName });
 
     })
-    .catch(function (err) {
-      throw err;
+    .catch(err => {
+      console.error(`\n!!! Error generating docker-compose.yaml: ${err}\n`);
+      return errorResponse(res, 'Error generating docker-compose.yaml. Cannot parse directory structure', err);
     });
-
 };
+
+
+const errorResponse = (res, message, error, status = 500) =>
+  res.status(status).json({ "status": status, "message": message, "error": error });
 
 
 
