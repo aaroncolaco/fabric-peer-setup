@@ -188,18 +188,6 @@ const configTxJSON = {
 };
 
 describe('Peer Config Files Tests', () => {
-  describe('POST ' + apiRootURL, () => {
-    it('response status should be 201', (done) => {
-      chai.request(completeURL)
-        .post('')
-        .end((err, res) => {
-          expect(res).to.have.status(201);
-          expect(res).to.be.an('object');
-          done();
-        });
-    });
-  });
-
   describe('POST ' + apiRootURL + '/yaml-file?fileName=crypto-config.yaml', () => {
     it('create `cryto-config.yaml`', (done) => {
       chai.request(completeURL)
@@ -307,4 +295,29 @@ describe('Peer Config Files Tests', () => {
         });
     });
   });
+
+  describe('POST ' + apiRootURL + '/docker-compose.yaml', () => {
+    it('generate docker-compose file', (done) => {
+      chai.request(completeURL)
+        .post('/docker-compose?fileName=docker-compose.yaml')
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('path');
+          done();
+        });
+    });
+  });
+
+  // describe('POST ' + apiRootURL + '/network', () => {
+  //   it('create the network', (done) => {
+  //     chai.request(completeURL)
+  //       .post('/network?fileName=docker-compose.yaml')
+  //       .end((err, res) => {
+  //         expect(res).to.have.status(201);
+  //         expect(res).to.be.an('object');
+  //         done();
+  //       });
+  //   });
+  // });
 });

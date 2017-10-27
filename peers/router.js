@@ -4,9 +4,6 @@ const express = require('express');
 const router = express.Router();
 
 const controller = require('./controller');
-const peer = require('./peer-setup');
-
-router.post('/', controller.createPeer);
 
 // specify `?channel` & `?profileName`
 router.post('/anchor-peer-file', controller.createAnchorPeerFile);
@@ -24,8 +21,8 @@ router.post('/yaml-file', controller.createYamlFile);
 // specify `?profileName`
 router.post('/genesis-block', controller.createGenesisBlock);
 
-router.post('/create-peer', peer.createPeer);
+router.post('/docker-compose', controller.createDockerCompose);
 
-router.post('/generate-file', peer.generateFile);
+router.post('/network', controller.createNetwork);
 
 module.exports = router;
