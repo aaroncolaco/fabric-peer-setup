@@ -10,17 +10,6 @@ const dirToJson = require('dir-to-json');
 const _ = require('lodash');
 
 
-const createPeer = (req, res) => {
-  const fileName = req.query.fileName || 'docker-compose.yaml';
-  exec(`cd ${config.getDirUri()} && docker-compose -f ${fileName} up -d`, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`\n!!! docker-compose exec error: ${error}`);
-      return res.status(500).json({ message: "Something went wrong. Check console" });
-    }
-    return res.status(201).json({ "message": "All peers are up and running" });
-  });
-};
-
 const getChildren = dirTree => {
   return dirTree.children;
 };
@@ -124,6 +113,7 @@ const getDockerComposeJSON = (caObject, peerObject, ordererObject) => {
   return dockerComposeJSON;
 };
 
+
 const getNames = dirTree => {
   const response = [];
   getPeerOrganizations(dirTree).forEach(function (element) {
@@ -132,6 +122,7 @@ const getNames = dirTree => {
   return response;
 };
 
+
 const getOrdererNames = dirTree => {
   let response = [];
   getOrdererOrganizations(dirTree).forEach(function (element) {
@@ -139,6 +130,7 @@ const getOrdererNames = dirTree => {
   }, this);
   return response;
 };
+
 
 const getOrdererOrganizations = dirTree => {
   let OrdererTree;
@@ -151,6 +143,7 @@ const getOrdererOrganizations = dirTree => {
   return OrdererTree;
 };
 
+
 const getPeerOrganizations = dirTree => {
   let peerTree;
   _.map(dirTree.children, function (peerElement) {
@@ -162,8 +155,8 @@ const getPeerOrganizations = dirTree => {
   return peerTree;
 };
 
+
 module.exports = {
-  createPeer,
   getChildren,
   getDockerComposeJSON,
   getNames,
