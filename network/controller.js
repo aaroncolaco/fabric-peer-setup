@@ -110,7 +110,9 @@ const createDockerCompose = (req, res) => {
       const peerOrganizations = helpers.getPeerOrganizations(dirTree);
       const ordererOrganizations = helpers.getOrdererOrganizations(dirTree);
       const peerNames = helpers.getNames(dirTree);
-      const ordererNames = helpers.getOrdererNames(dirTree);
+      let ordererNames;
+
+      if(ordererOrganizations) ordererNames = helpers.getOrdererNames(dirTree);
 
       // Peer directory and CA directory
       _.map(peerOrganizations, peer => {
@@ -133,18 +135,19 @@ const createDockerCompose = (req, res) => {
       });
 
       // Orderer directory
-      _.map(ordererOrganizations, orderer => {
-        const files = helpers.getChildren(orderer);
-        _.map(files, item => {
-          if (item.name == "orderers") { // reading orderer certificates
-            ordererDirectory[orderer.name] = [];
-            _.map(item.children, specificOrderer => {
-              ordererDirectory[orderer.name].push(specificOrderer.name);
-            });
-          }
+      if (ordererOrganizations) {
+        _.map(ordererOrganizations, orderer => {
+          const files = helpers.getChildren(orderer);
+          _.map(files, item => {
+            if (item.name == "orderers") { // reading orderer certificates
+              ordererDirectory[orderer.name] = [];
+              _.map(item.children, specificOrderer => {
+                ordererDirectory[orderer.name].push(specificOrderer.name);
+              });
+            }
+          });
         });
-      });
-
+      }
 
       const fileName = req.query.fileName || 'docker-compose.yaml';
       try {

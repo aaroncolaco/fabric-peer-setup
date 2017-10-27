@@ -1,12 +1,12 @@
 {
   "production": {
     "dbString" : "DB_URL",
-    "dirUri" : "/usr/src/fabric-peers/",
+    "dirUri" : "/home/subhod/workspace/hyperledger/fabric-peers/",
     "url": "http://10.244.49.238:3000"
   },
   "development" : {
     "dbString" : "DB_URL",
-    "dirUri" : "/home/aaron/fabric-peers/",
+    "dirUri" : "/home/subhod/workspace/hyperledger/fabric-peers/",
     "url": "http://10.244.51.109:3000"
   },
   "statusMsgs": {
