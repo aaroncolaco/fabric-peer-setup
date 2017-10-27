@@ -156,11 +156,24 @@ const getPeerOrganizations = dirTree => {
 };
 
 
+const runTerminalCommand = command => {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(stdout);
+    });
+  });
+};
+
+
 module.exports = {
   getChildren,
   getDockerComposeJSON,
   getNames,
   getOrdererNames,
   getOrdererOrganizations,
-  getPeerOrganizations
+  getPeerOrganizations,
+  runTerminalCommand
 };
