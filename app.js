@@ -11,7 +11,7 @@ const network = require('./network/router');
 
 const app = express();
 
-app.use(logger('dev'));
+app.use(config.getEnv() === 'development' ? logger('dev') : logger('combined'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
