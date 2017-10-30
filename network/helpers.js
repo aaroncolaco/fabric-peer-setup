@@ -40,15 +40,16 @@ const getDockerComposeJSON = (caObject, peerObject, ordererObject) => {
 
   let caPort = 7054;
   _.forIn(caObject, function (value, key) {
+    let cert = value[0] == "ca." + key+"-cert.pem" ? new Array(value[0],value[1]): new Array(value[1],value[0]);
     let ca = {
       "image": "hyperledger/fabric-ca:x86_64-1.0.0",
       "environment": [
         "FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server",
-        "FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/" + value[0],
-        "FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/" + value[1],
+        "FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/" + cert[1],
+        "FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/" + cert[0],
         "FABRIC_CA_SERVER_TLS_ENABLED=true",
-        "FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/" + value[0],
-        "FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/" + value[1]
+        "FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/" + cert[1],
+        "FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/" + cert[0]
       ],
       "ports": [
         caPort.toString() + ":7054"
@@ -179,8 +180,7 @@ const runTerminalCommand = command => {
       return resolve(stdout);
     });
   });
-};
-
+ };
 
 module.exports = {
   createBaseYamlFile,
