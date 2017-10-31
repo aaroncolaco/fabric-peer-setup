@@ -77,14 +77,23 @@ const createNetwork = (req, res) => {
 const createYamlFile = (req, res) => {
   const fileName = req.query.fileName || 'myYamlFile.yaml';
   const doc = yaml.safeDump(req.body);
-  fs.writeFileSync(config.getDirUri() + fileName, doc);
-  return res.status(201).json({ "message": "YAML file created", path: config.getDirUri() + fileName });
+  fs.writeFile(config.getDirUri() + fileName, doc, (err) => {
+    if (err) {
+      return errorResponse(res, `could not create file: ${fileName}`, err, 500);
+    }
+    return res.status(201).json({ "message": "YAML file created", path: config.getDirUri() + fileName });
+  });
 };
 
 const getYamlFile = (req, res) => {
   const fileName = req.query.fileName || 'myYamlFile.yaml';
-  const doc = yaml.safeLoad(fs.readFileSync(config.getDirUri() + fileName, 'utf8'));
-  return res.status(200).json({ "message": "Retrieved file", file: doc });
+  fs.readFile(config.getDirUri() + fileName, 'utf8', (err, data) => {
+    if (err) {
+      return errorResponse(res, `could not read file: ${fileName}`, err, 500);
+    }
+    const doc = yaml.safeLoad(data);
+    return res.status(200).json({ "message": "Retrieved file", file: doc });
+  });
 };
 
 const runCryptogen = (req, res) => {
