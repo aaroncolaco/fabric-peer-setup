@@ -296,6 +296,17 @@ describe('Peer Config Files Tests', () => {
     });
   });
 
+  describe('GET ' + apiRootURL + '/peer/peer0', () => {
+    it('export peer cert', (done) => {
+      chai.request(completeURL)
+        .get('/peer/peer0?orgName=org1&domain=example.com')
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          done();
+        });
+    });
+  });
+
   describe('POST ' + apiRootURL + '/docker-compose', () => {
     it('generate docker-compose file', (done) => {
       chai.request(completeURL)
@@ -309,15 +320,16 @@ describe('Peer Config Files Tests', () => {
     });
   });
 
-  describe('POST ' + apiRootURL, () => {
-    it('create the network', (done) => {
-      chai.request(completeURL)
-        .post('?fileName=docker-compose.yaml')
-        .end((err, res) => {
-          expect(res).to.have.status(201);
-          expect(res).to.be.an('object');
-          done();
-        });
-    });
-  });
+  // describe('POST ' + apiRootURL, () => {
+  //   it('create the network', (done) => {
+  //     chai.request(completeURL)
+  //       .post('?fileName=docker-compose.yaml')
+  //       .end((err, res) => {
+  //         expect(res).to.have.status(201);
+  //         expect(res).to.be.an('object');
+  //         done();
+  //       });
+  //   });
+  // });
+
 });

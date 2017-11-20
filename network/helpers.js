@@ -23,6 +23,14 @@ const createBaseYamlFile = () => {
   });
 };
 
+const exportPeerCertificates = (orgName, domain, peerName) => {
+  // ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+  const orgAtDomain = `${orgName}.${domain}`;
+  const path = `${orgAtDomain}/peers/${peerName}.${orgAtDomain}/tls/ca.crt`;
+  const command = `cd ${config.getDirUri()}crypto-config/peerOrganizations/ && tar -czvf ${config.getDirUri()}${orgAtDomain}.tar.gz ${path}`;
+  return runTerminalCommand(command);
+};
+
 
 const getChildren = dirTree => {
   return dirTree.children;
@@ -40,7 +48,7 @@ const getDockerComposeJSON = (caObject, peerObject, ordererObject) => {
 
   let caPort = 7054;
   _.forIn(caObject, function (value, key) {
-    let cert = value[0] == "ca." + key+"-cert.pem" ? new Array(value[0],value[1]): new Array(value[1],value[0]);
+    let cert = value[0] == "ca." + key + "-cert.pem" ? new Array(value[0], value[1]) : new Array(value[1], value[0]);
     let ca = {
       "image": "hyperledger/fabric-ca:x86_64-1.0.0",
       "environment": [
@@ -180,10 +188,11 @@ const runTerminalCommand = command => {
       return resolve(stdout);
     });
   });
- };
+};
 
 module.exports = {
   createBaseYamlFile,
+  exportPeerCertificates,
   getChildren,
   getDockerComposeJSON,
   getNames,

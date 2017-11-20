@@ -85,6 +85,25 @@ const createYamlFile = (req, res) => {
   });
 };
 
+const exportPeerCertificates = (req, res) => {
+  const orgName = req.query.orgName;
+  const domain = req.query.domain;
+  const peerName = req.params.peerName;
+
+  return res.send(peerName);
+
+  const downloadFileName = `${orgName}.${domain}.tar.gz`;
+
+  helpers.exportPeerCertificates(orgName, domain, peerName)
+    .then(resolve => {
+      return res.status(200).download(config.getDirUri() + downloadFileName, downloadFileName);
+    })
+    .catch(err => {
+      console.error(err);
+      return errorResponse(res, `could not export ${orgName}.${domain}`, err, 500);
+    });
+};
+
 const getYamlFile = (req, res) => {
   const fileName = req.query.fileName || 'myYamlFile.yaml';
   fs.readFile(config.getDirUri() + fileName, 'utf8', (err, data) => {
@@ -192,6 +211,7 @@ module.exports = {
   createGenesisBlock,
   createNetwork,
   createYamlFile,
+  exportPeerCertificates,
   getYamlFile,
   runCryptogen
 };

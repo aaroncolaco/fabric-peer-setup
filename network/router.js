@@ -18,6 +18,9 @@ router.use((req, res, next) => {
 
 router.post('/', controller.createNetwork);
 
+// specify `?orgName` & `?domain`
+router.get('/peer/:peerName', controller.exportPeerCertificates);
+
 // specify `?channel` & `?profileName`
 router.post('/anchor-peer-file', controller.createAnchorPeerFile);
 
