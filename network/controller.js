@@ -90,8 +90,6 @@ const exportPeerCertificates = (req, res) => {
   const domain = req.query.domain;
   const peerName = req.params.peerName;
 
-  return res.send(peerName);
-
   const downloadFileName = `${orgName}.${domain}.tar.gz`;
 
   helpers.exportPeerCertificates(orgName, domain, peerName)
