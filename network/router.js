@@ -18,26 +18,26 @@ router.use((req, res, next) => {
 
 router.post('/', controller.createNetwork);
 
-// specify `?orgName` & `?domain`
+// export peer credentials
+// `?orgName` & `?domain`
 router.get('/peer/:peerName', controller.exportPeerCertificates);
 
-// specify `?channel` & `?profileName`
+// Retrieve yaml file as JSON
+router.get('/yaml-file', controller.getYamlFile);
+
+// Generate files
+// `?channel` & `?profileName`
 router.post('/anchor-peer-file', controller.createAnchorPeerFile);
-
-// specify `?channel` & `?profileName`
+// `?channel` & `?profileName`
 router.post('/channel', controller.createChannel);
-
-// specify `?fileName`
+// `?fileName`
 router.post('/cryptogen-generate', controller.runCryptogen);
-
 // generates by reading filesystem
 router.post('/docker-compose', controller.createDockerCompose);
-
-// specify `?profileName`
+// `?profileName`
 router.post('/genesis-block', controller.createGenesisBlock);
-
-// specify `?fileName`
-router.get('/yaml-file', controller.getYamlFile);
+// `?fileName`
 router.post('/yaml-file', controller.createYamlFile);
+
 
 module.exports = router;
