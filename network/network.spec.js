@@ -307,6 +307,19 @@ describe('Peer Config Files Tests', () => {
     });
   });
 
+  describe('POST ' + apiRootURL + '/org/org1', () => {
+    it('import other org peer cert', (done) => {
+      chai.request(completeURL)
+        .post('/org/org1')
+        .attach("file", '/home/aaron/tmp/org1.example.com.tar.gz', 'org1.example.com.tar.gz')
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res.body).to.have.property('message');
+          done();
+        });
+    });
+  });
+
   describe('POST ' + apiRootURL + '/docker-compose', () => {
     it('generate docker-compose file', (done) => {
       chai.request(completeURL)

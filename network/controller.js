@@ -113,6 +113,21 @@ const getYamlFile = (req, res) => {
   });
 };
 
+const importOrgPeerCertificates = (req, res) => {
+  const orgName = req.params.orgName;
+
+  const fileName = req.file.originalname;
+
+  helpers.importOrgPeerCertificates(fileName)
+    .then(resolve => {
+      return res.status(201).json({ message: `Imported certificate(s) for ${orgName}` });
+    })
+    .catch(err => {
+      console.error(err);
+      return errorResponse(res, `could not import certificate(s) for ${orgName}`, err, 500);
+    });
+};
+
 const runCryptogen = (req, res) => {
   const fileName = req.query.fileName || 'crypto-config.yaml';
   const terminalCommand = `cd ${config.getDirUri()} && rm -rf crypto-config && cryptogen generate --config=${fileName}`;
@@ -211,5 +226,6 @@ module.exports = {
   createYamlFile,
   exportPeerCertificates,
   getYamlFile,
+  importOrgPeerCertificates,
   runCryptogen
 };

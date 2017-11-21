@@ -179,6 +179,11 @@ const getPeerOrganizations = dirTree => {
 };
 
 
+const importOrgPeerCertificates = fileName => {
+  const command = `cd ${config.getDirUri()} && tar -xzf ${fileName} --directory ./crypto-config/peerOrganizations/ && rm ${fileName}`;
+  return runTerminalCommand(command);
+};
+
 const runTerminalCommand = command => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
@@ -199,5 +204,6 @@ module.exports = {
   getOrdererNames,
   getOrdererOrganizations,
   getPeerOrganizations,
+  importOrgPeerCertificates,
   runTerminalCommand
 };

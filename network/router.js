@@ -2,8 +2,18 @@
 
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
 
+const config = require('../config/');
 const controller = require('./controller');
+
+const storage = multer.diskStorage({
+  destination: config.getDirUri(),
+  filename: (req, file, callback) => callback(null, file.originalname)
+});
+
+const upload = multer({ storage: storage });
+
 
 // middleware to allow CORS
 router.use((req, res, next) => {
@@ -39,5 +49,8 @@ router.post('/genesis-block', controller.createGenesisBlock);
 // `?fileName`
 router.post('/yaml-file', controller.createYamlFile);
 
+
+// import other org's peer credentials
+router.post('/org/:orgName', upload.single('file'), controller.importOrgPeerCertificates);
 
 module.exports = router;
