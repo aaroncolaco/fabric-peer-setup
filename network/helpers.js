@@ -2,6 +2,7 @@
 
 const { exec } = require('child_process');
 const fs = require('fs');
+const os = require('os');
 const yaml = require('js-yaml');
 
 const config = require('../config/');
@@ -179,6 +180,16 @@ const getPeerOrganizations = dirTree => {
 };
 
 
+// returns system stats
+const getSystemStats = () => ({
+  uptime: os.uptime(),
+  availableMem: os.freemem(),
+  totalMem: os.totalmem(),
+  avgLoad: os.loadavg(),
+  cpu: os.cpus()
+});
+
+
 const importOrgPeerCertificates = fileName => {
   const command = `cd ${config.getDirUri()} && tar -xzf ${fileName} --directory ./crypto-config/peerOrganizations/ && rm ${fileName}`;
   return runTerminalCommand(command);
@@ -204,6 +215,7 @@ module.exports = {
   getOrdererNames,
   getOrdererOrganizations,
   getPeerOrganizations,
+  getSystemStats,
   importOrgPeerCertificates,
   runTerminalCommand
 };

@@ -102,6 +102,11 @@ const exportPeerCertificates = (req, res) => {
     });
 };
 
+const getSystemStats = (req, res) => {
+  const stats = helpers.getSystemStats();
+  res.status(200).json(stats);
+};
+
 const getYamlFile = (req, res) => {
   const fileName = req.query.fileName || 'myYamlFile.yaml';
   fs.readFile(config.getDirUri() + fileName, 'utf8', (err, data) => {
@@ -225,6 +230,7 @@ module.exports = {
   createNetwork,
   createYamlFile,
   exportPeerCertificates,
+  getSystemStats,
   getYamlFile,
   importOrgPeerCertificates,
   runCryptogen

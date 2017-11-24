@@ -346,3 +346,21 @@ describe('Peer Config Files Tests', () => {
   // });
 
 });
+
+
+describe('System tests', () => {
+  it('gets system stats', (done) => {
+    chai.request(completeURL)
+      .get('/stats')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res).to.be.an('object');
+        expect(res.body).to.have.property('uptime');
+        expect(res.body).to.have.property('availableMem');
+        expect(res.body).to.have.property('totalMem');
+        expect(res.body).to.have.property('avgLoad');
+        expect(res.body).to.have.property('cpu');
+        done();
+      });
+  });
+});

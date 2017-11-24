@@ -28,6 +28,8 @@ router.use((req, res, next) => {
 
 router.post('/', controller.createNetwork);
 
+router.get('/stats', controller.getSystemStats);
+
 // export peer credentials
 // `?orgName` & `?domain`
 router.get('/peer/:peerName', controller.exportPeerCertificates);
