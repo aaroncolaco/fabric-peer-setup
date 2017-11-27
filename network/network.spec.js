@@ -299,7 +299,7 @@ describe('Peer Config Files Tests', () => {
   describe('GET ' + apiRootURL + '/peer/peer0', () => {
     it('export peer cert', (done) => {
       chai.request(completeURL)
-        .get('/peer/peer0?orgName=org1&domain=example.com')
+        .get('/peer/peer0?domain=org1.example.com')
         .end((err, res) => {
           expect(res).to.have.status(200);
           done();

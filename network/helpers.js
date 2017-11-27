@@ -24,9 +24,9 @@ const createBaseYamlFile = () => {
   });
 };
 
-const exportPeerCertificates = (orgName, domain, peerName) => {
+const exportPeerCertificates = (domain, peerName) => {
   // ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-  const orgAtDomain = `${orgName}.${domain}`;
+  const orgAtDomain = domain;
   const path = `${orgAtDomain}/peers/${peerName}.${orgAtDomain}/tls/ca.crt`;
   const command = `cd ${config.getDirUri()}crypto-config/peerOrganizations/ && tar -czvf ${config.getDirUri()}${orgAtDomain}.tar.gz ${path}`;
   return runTerminalCommand(command);

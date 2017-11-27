@@ -86,19 +86,18 @@ const createYamlFile = (req, res) => {
 };
 
 const exportPeerCertificates = (req, res) => {
-  const orgName = req.query.orgName;
   const domain = req.query.domain;
   const peerName = req.params.peerName;
 
-  const downloadFileName = `${orgName}.${domain}.tar.gz`;
+  const downloadFileName = `${domain}.tar.gz`;
 
-  helpers.exportPeerCertificates(orgName, domain, peerName)
+  helpers.exportPeerCertificates(domain, peerName)
     .then(resolve => {
       return res.status(200).download(config.getDirUri() + downloadFileName, downloadFileName);
     })
     .catch(err => {
       console.error(err);
-      return errorResponse(res, `could not export ${orgName}.${domain}`, err, 500);
+      return errorResponse(res, `could not export ${domain}`, err, 500);
     });
 };
 

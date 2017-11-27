@@ -31,7 +31,7 @@ router.post('/', controller.createNetwork);
 router.get('/stats', controller.getSystemStats);
 
 // export peer credentials
-// `?orgName` & `?domain`
+// `?domain`
 router.get('/peer/:peerName', controller.exportPeerCertificates);
 
 // Retrieve yaml file as JSON
