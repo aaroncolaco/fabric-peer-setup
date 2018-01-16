@@ -191,7 +191,7 @@ const getSystemStats = () => ({
 
 
 const importOrgPeerCertificates = fileName => {
-  const command = `cd ${config.getDirUri()} && tar -xzf ${fileName} --directory ./crypto-config/peerOrganizations/ && rm ${fileName}`;
+  const command = `cd ${config.getDirUri()} && mkdir crypto-config/peerOrganizations &&tar -xzf ${fileName} --directory ./crypto-config/peerOrganizations/ && rm ${fileName}`;
   return runTerminalCommand(command);
 };
 
