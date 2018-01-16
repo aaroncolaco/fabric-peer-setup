@@ -67,7 +67,7 @@ const getDockerComposeJSON = (caObject, peerObject, ordererObject) => {
       "volumes": [
         "./crypto-config/peerOrganizations/" + key + "/ca/:/etc/hyperledger/fabric-ca-server-config"
       ],
-      "container_name": "ca_peerOrg1"
+      "container_name": "ca_peer"+_.capitalize(key.split('.')[0])
     };
     caPort += 1000;
     dockerComposeJSON.services["ca." + key] = ca;
