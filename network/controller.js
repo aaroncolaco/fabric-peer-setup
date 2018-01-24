@@ -134,7 +134,7 @@ const importOrgPeerCertificates = (req, res) => {
 
 const runCryptogen = (req, res) => {
   const fileName = req.query.fileName || 'crypto-config.yaml';
-  const terminalCommand = `cd ${config.getDirUri()} && rm -rf crypto-config && cryptogen generate --config=${fileName}`;
+  const terminalCommand = `cd ${config.getDirUri()} && cryptogen generate --config=${fileName}`;
 
   helpers.runTerminalCommand(terminalCommand)
     .then(output => {
